@@ -2,6 +2,7 @@
 
 # Instalação
 pip install django
+pip install mysqlclient
 pip install django djangorestframework
 pip install djangorestframework-jwt
 
