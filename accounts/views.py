@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import UserForm, LoginForm
+from .models import User  # Importe seu modelo User
 
 def signup(request):
     # Verificamos se o método da solicitação é POST
@@ -29,10 +30,20 @@ def user_login(request):
             # Recuperar os dados do formulário
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
+
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                user = None
+
             # Autenticar o usuário com as credenciais enviadas pelo formulário
-            user = authenticate(request, email=email, password=password)
+            #user = authenticate(request, email=email, password=password)
+
             # Verificar se o usuário existe no banco de dados
-            if user is not None:
+            #if user is not None:
+            
+            if user is not None and user.check_password(password):
+                # Autentica o usuário
                 # Caso a autenticação seja bem-sucedida, armazenar os dados do usuário na sessão do usuário
                 login(request, user)  # Aqui está a correção
                 # Redireciona para a página inicial ou outra página após o login bem-sucedido
